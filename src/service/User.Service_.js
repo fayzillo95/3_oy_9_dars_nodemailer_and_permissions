@@ -27,7 +27,7 @@ export default class UserService {
             _id: newUser._id,
             isverfy: newUser.isverfy,
             role: newUser.role,
-            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+            ip: req.headers['x-forwarded-for'].split(",")[0],
             agent: req.headers['user-agent']
         }
         await sendVerifikatsiy(email, getUrl(tokenData), getrefUrl(tokenData))
