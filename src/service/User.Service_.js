@@ -31,7 +31,7 @@ export default class UserService {
             agent: req.headers['user-agent']
         }
         await sendVerifikatsiy(email, getUrl(tokenData), getrefUrl(tokenData))
-
+        console.log("User service line 34 ",tokenData)
         return { status: 201, success: true, message: "User register successfull verfy link send to email !" }
     }
 
