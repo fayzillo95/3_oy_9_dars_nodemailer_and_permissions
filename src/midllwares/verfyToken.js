@@ -8,7 +8,7 @@ export const verfyToken = (req, res, next) => {
         const clientAgent = req.headers['user-agent']
 
         const decoded = JWT.verify(token, process.env.JWT_ACCESS_KEY)
-        console.log("Verfy token line 11 ",decoded.ip , clientIP)
+        console.log("Verfy token line 11 ",`decode ${decoded.ip}` ,"\n", `req ${clientIP}`)
         if (decoded.ip != clientIP) {
             throw new AuthorizationError("IP address mismatch", 406)
         }
