@@ -15,5 +15,6 @@ export default class CustomValidation {
             email:Joi.string().email().required(),
             password:Joi.string().min(8).max(32).required()
         })
+        return loginSchema.validate(payload)
     }
 }

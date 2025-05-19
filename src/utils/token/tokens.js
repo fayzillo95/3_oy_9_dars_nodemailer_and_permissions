@@ -4,7 +4,7 @@ export const getToken = (payload) => {
     const accessToken = JWT.sign(payload,process.env.JWT_ACCESS_KEY,{expiresIn:'4h'})
     const refreshToken = JWT.sign(payload,process.env.JWT_REFRESH_KEY, {expiresIn:'24h'})
     return {
-        succes:true,
+        success:true,
         accessToken,refreshToken
     }
 }
