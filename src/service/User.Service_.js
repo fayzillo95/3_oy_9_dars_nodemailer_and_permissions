@@ -11,78 +11,83 @@ import CustomError from "../utils/errors/CustomError_.js";
 
 const refreshUrl = `http://${process.env.HOST}:${process.env.PORT}/refreshtoken`
 
-export default class UserService{
-    constructor(){}
+export default class UserService {
+    constructor() { }
 
     static async readAll() {
         const data = await userModel_.find()
-        return {success:true,message:"Read users successfull !",data}
+        return { success: true, message: "Read users successfull !", data }
     }
 
     static async createUser(req) {
-        let {email, password, fullname} =  req.body
+        let { email, password, fullname } = req.body
         password = await bcrypt.hash(password, 10)
-        const newUser = await userModel_.create({email, password, fullname})
-        const tokenData = {_id:newUser._id, isverfy:newUser.isverfy, role:newUser.role}
-
+        const newUser = await userModel_.create({ email, password, fullname })
+        const tokenData = {
+            _id: newUser._id,
+            isverfy: newUser.isverfy,
+            role: newUser.role,
+            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+            agent: req.headers['user-agent']
+        }
         await sendVerifikatsiy(email, getUrl(tokenData), getrefUrl(tokenData))
 
-        return {status:201,success:true,message:"User register successfull verfy link send to email !"}
+        return { status: 201, success: true, message: "User register successfull verfy link send to email !" }
     }
 
     static async checkLogin(body) {
-        let {email, password} =  body
-        
-        let user  = await userModel_.findOne({email})
-        if(!user) throw new CustomError("User not found !" , 404)
-        
+        let { email, password } = body
+
+        let user = await userModel_.findOne({ email })
+        if (!user) throw new CustomError("User not found !", 404)
+
         let checkPasss = await bcrypt.compare(password, user.password)
-        if(!checkPasss) throw new AuthorizationError("Invalid email or password ! ", 401)
-        
-        if(!user.isverfy) throw new AuthorizationError("User verification not done ! ", 401)
-        const tokenData = {_id:user._id, isverfy:user.isverfy, role:user.role}
-        return tokenData        
+        if (!checkPasss) throw new AuthorizationError("Invalid email or password ! ", 401)
+
+        if (!user.isverfy) throw new AuthorizationError("User verification not done ! ", 401)
+        const tokenData = { _id: user._id, isverfy: user.isverfy, role: user.role }
+        return tokenData
     }
-    
+
     static async verifyUser(user) {
         const oldUser = await userModel_.findById(user._id)
 
-        if(!oldUser) throw new AuthorizationError("User not found !", 404)
-        if(!oldUser.isverfy){
+        if (!oldUser) throw new AuthorizationError("User not found !", 404)
+        if (!oldUser.isverfy) {
             oldUser.isverfy = true
             await oldUser.save()
-            return {_id:oldUser._id, isverfy:oldUser.isverfy, role:oldUser.role}
+            return { _id: oldUser._id, isverfy: oldUser.isverfy, role: oldUser.role }
         }
-        return {status:200,success:true,message:"User verification already done login again"}
+        return { status: 200, success: true, message: "User verification already done login again" }
     }
-    
+
     static async addPermission(body) {
         const oldUser = await userModel_.findById(body.user_id)
-        if(!oldUser) throw new AuthorizationError("User not found !", 404)
-        
+        if (!oldUser) throw new AuthorizationError("User not found !", 404)
+
         const permition = await permissionModel_.findOne({
-            user_id:body.user_id, 
-            model:body.model
+            user_id: body.user_id,
+            model: body.model
         })
-        
-        if(permition) {
+
+        if (permition) {
             body.actions = Array.isArray(body.actions) ? body.actions : [body.actions]
-            let newactions = new Set([...permition.actions,...body.actions])
-            
+            let newactions = new Set([...permition.actions, ...body.actions])
+
             permition.actions = [...newactions]
             await permition.save()
-        }else{
-            const newPemition = await permissionModel_.create(body)   
+        } else {
+            const newPemition = await permissionModel_.create(body)
         }
-        return {status:201,success:true,message:"Permition added successfull !"}
+        return { status: 201, success: true, message: "Permition added successfull !" }
     }
 
     static async assignetRole(body) {
         const oldUser = await userModel_.findById(body.user_id)
-        if(!oldUser) throw new AuthorizationError("User not found !", 404)
+        if (!oldUser) throw new AuthorizationError("User not found !", 404)
         oldUser.role = body.role
         await oldUser.save()
-        return {status:201,message:"User role assignet !"}    
+        return { status: 201, message: "User role assignet !" }
     }
 }
 
