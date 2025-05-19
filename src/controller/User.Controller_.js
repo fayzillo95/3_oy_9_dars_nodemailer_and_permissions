@@ -13,6 +13,7 @@ export default class UserController {
     }
     static async registratriysa (req, res, next) {
         try {
+            console.log(req.body)
             req.user = await UserService.createUser(req)
             res.status(req.user.status || 200).json(req.user)
         } catch (error) {
