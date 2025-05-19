@@ -1,6 +1,6 @@
 import UserService from "../service/User.Service_.js";
 
-class UserController {
+export default class UserController {
     constructor(parameters) {}
     
     static async getAllUsers (req, res, next) {
@@ -14,7 +14,7 @@ class UserController {
     static async registratriysa (req, res, next) {
         try {
             req.user = await UserService.createUser(req)
-            next()
+            res.status(req.user.status || 200).json(req.user)
         } catch (error) {
             next(error)
         }
@@ -22,6 +22,9 @@ class UserController {
     static async verification (req, res, next) {
         try {
             req.user = await UserService.verifyUser(req.user)
+            if(req.user.status){
+                return res.status(req.user.status).json(req.user)
+            }
             next()
         } catch (error) {
             next(error)

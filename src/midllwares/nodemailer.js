@@ -1,7 +1,7 @@
 import { transporter, htmlgeneretor, email, emailkey } from "../utils/componentes/emails/email_componentes.js";
 
 async function sendVerifikatsiy(user, url, refreshurl) {
-
+    
     const mailOptions = {
         from: email,
         to: user,

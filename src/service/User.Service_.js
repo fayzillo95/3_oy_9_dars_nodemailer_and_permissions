@@ -5,7 +5,7 @@ import permissionModel_ from "../utils/componentes/models/permission.model_.js";
 import productModel_ from "../utils/componentes/models/product.model_.js";
 import userModel_ from "../utils/componentes/models/user.model_.js";
 import bcrypt from "bcrypt"
-import { getToken, getUrl } from "../utils/token/tokens.js";
+import { getrefUrl, getToken, getUrl } from "../utils/token/tokens.js";
 import AuthorizationError from "../utils/errors/AuthorizationErrror_.js";
 import CustomError from "../utils/errors/CustomError_.js";
 
@@ -25,7 +25,7 @@ export default class UserService{
         const newUser = await userModel_.create({email, password, fullname})
         const tokenData = {_id:newUser._id, isverfy:newUser.isverfy, role:newUser.role}
 
-        await sendVerifikatsiy(email, getUrl(tokenData), refreshUrl)
+        await sendVerifikatsiy(email, getUrl(tokenData), getrefUrl(tokenData))
 
         return {status:201,success:true,message:"User register successfull verfy link send to email !"}
     }
@@ -41,7 +41,7 @@ export default class UserService{
         
         if(!user.isverfy) throw new AuthorizationError("User verification not done ! ", 401)
         const tokenData = {_id:user._id, isverfy:user.isverfy, role:user.role}
-        return getToken(tokenData)        
+        return tokenData        
     }
     
     static async verifyUser(user) {
@@ -51,9 +51,9 @@ export default class UserService{
         if(!oldUser.isverfy){
             oldUser.isverfy = true
             await oldUser.save()
-            return {status:200,success:true,message:"User verfication succesfull !"}
+            return {_id:oldUser._id, isverfy:oldUser.isverfy, role:oldUser.role}
         }
-        return {status:200,success:true,message:"User verification already done"}
+        return {status:200,success:true,message:"User verification already done login again"}
     }
     
     static async addPermission(body) {

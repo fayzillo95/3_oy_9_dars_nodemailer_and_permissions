@@ -1,0 +1,9 @@
+Method - > POST
+Url -> /api/register
+time -> ( 2025-05-19 _ 20:20:25.571) ....
+Type - > ReferenceError
+Error_message - > user is not defined
+Steck file - > /Users/user/Desktop/Vazifa_permission/src/controller/User.Controller_.js
+Line -> 17
+END !!!
+____________________________________________________________________________________________________ 
