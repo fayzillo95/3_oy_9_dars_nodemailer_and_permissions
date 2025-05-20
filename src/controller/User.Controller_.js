@@ -48,4 +48,12 @@ export default class UserController {
             next(error)
         }
     }
+    static async clearUsers(req, res, next) {
+        try {
+            req.user = await UserService.clearsU()
+            next()
+        } catch (error) {
+            next(error)
+        }
+    }
 }
