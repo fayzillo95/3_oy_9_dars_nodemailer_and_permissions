@@ -15,7 +15,8 @@ export default class UserController {
         try {
             console.log(req.body)
             req.user = await UserService.createUser(req)
-            res.status(req.user.status || 200).json(req.user)
+            req.status = 201
+            next()
         } catch (error) {
             next(error)
         }
@@ -31,9 +32,9 @@ export default class UserController {
             next(error)
         }
     }
-    static addPermissionUser(req, res, next) {
+    static async addPermissionUser(req, res, next) {
         try{
-            req.user = UserService.addPermission(req.body)
+            req.user = await UserService.addPermission(req.body)
             next()
         }catch(error){
             next(error)

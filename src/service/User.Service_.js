@@ -1,4 +1,4 @@
-import sendVerifikatsiy from "../midllwares/nodemailer.js";
+import sendVerifikatsiy from "../midllwares/RESPONSEMIDLL/nodemailer.js";
 import categoryModel_ from "../utils/componentes/models/category.model._.js";
 import ordersModel_ from "../utils/componentes/models/orders.model_.js";
 import permissionModel_ from "../utils/componentes/models/permission.model_.js";
@@ -9,7 +9,6 @@ import { getrefUrl, getToken, getUrl } from "../utils/token/tokens.js";
 import AuthorizationError from "../utils/errors/AuthorizationErrror_.js";
 import CustomError from "../utils/errors/CustomError_.js";
 
-const refreshUrl = `http://${process.env.HOST}:${process.env.PORT}/refreshtoken`
 
 export default class UserService {
     constructor() { }
@@ -27,27 +26,12 @@ export default class UserService {
             _id: newUser._id,
             isverfy: newUser.isverfy,
             role: newUser.role,
-            ip: req.ip.split(",")[0],
             agent: req.headers['user-agent']
         }
         await sendVerifikatsiy(email, getUrl(tokenData), getrefUrl(tokenData))
-        console.log("User service line 34 ",tokenData)
         return { status: 201, success: true, message: "User register successfull verfy link send to email !" }
     }
 
-    static async checkLogin(body) {
-        let { email, password } = body
-
-        let user = await userModel_.findOne({ email })
-        if (!user) throw new CustomError("User not found !", 404)
-
-        let checkPasss = await bcrypt.compare(password, user.password)
-        if (!checkPasss) throw new AuthorizationError("Invalid email or password ! ", 401)
-
-        if (!user.isverfy) throw new AuthorizationError("User verification not done ! ", 401)
-        const tokenData = { _id: user._id, isverfy: user.isverfy, role: user.role }
-        return tokenData
-    }
 
     static async verifyUser(user) {
         const oldUser = await userModel_.findById(user._id)
@@ -76,6 +60,7 @@ export default class UserService {
 
             permition.actions = [...newactions]
             await permition.save()
+
         } else {
             const newPemition = await permissionModel_.create(body)
         }
@@ -83,12 +68,10 @@ export default class UserService {
     }
 
     static async assignetRole(body) {
-        const oldUser = await userModel_.findById(body.user_id)
+        const oldUser = await userModel_.findById(body.id)
         if (!oldUser) throw new AuthorizationError("User not found !", 404)
         oldUser.role = body.role
         await oldUser.save()
-        return { status: 201, message: "User role assignet !" }
+        return { status: 201, message: "User role assignet !",data:oldUser }
     }
 }
-
-// console.log(categoryModel_, ordersModel_, permissionModel_, productModel_.schema.obj, userModel_.schema.obj)
