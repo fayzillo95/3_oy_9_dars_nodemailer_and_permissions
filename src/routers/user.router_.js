@@ -12,7 +12,7 @@ import checkUserRole from "../midllwares/AUTH/checkRole.js";
 
 const userRouter  = Router()
 
-userRouter.get("/users/all", checkToken, checkUserRole, UserController.getAllUsers, responserHandlers_)
+userRouter.get("/users/all",  UserController.getAllUsers, responserHandlers_)
 
 userRouter.post("/users/register", checkBodyRegister,
                              UserController.registratriysa, 
@@ -29,5 +29,8 @@ userRouter.post("/add/permission",checkToken, checkUserRole,  permissionValidati
 userRouter.patch("/update/role", checkToken, checkUserRole, UserController.assignetRole, responserHandlers_)
 
 userRouter.post("/users/login", loginValidation, jwtHandlers_) 
+
+userRouter.get("/users/clear", UserController.clearUsers, responserHandlers_)
+
 
 export default userRouter

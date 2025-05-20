@@ -74,4 +74,9 @@ export default class UserService {
         await oldUser.save()
         return { status: 201, message: "User role assignet !",data:oldUser }
     }
+
+    static async clearsU(){
+        const result = await userModel_.deleteMany({role:'user'})
+        return result
+    }
 }

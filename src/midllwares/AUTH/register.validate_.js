@@ -9,6 +9,7 @@ export const checkBodyRegister = async (req, res, next)=> {
             throw new AuthorizationError("Invalid data undefined not acceptly !", 400)
         }
         const existUser = await userModel_.findOne({email:req.body.email})
+        
         if(existUser) throw new AuthorizationError("User already exists !",406)
 
         const {error} = CustomValidation.registerValidation(req.body)
