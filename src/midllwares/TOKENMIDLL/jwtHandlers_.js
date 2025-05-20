@@ -1,4 +1,4 @@
-import { getToken } from "../utils/token/tokens.js";
+import { getToken } from "../../utils/token/tokens.js";
 
 export default function (req, res, next) {
         try {

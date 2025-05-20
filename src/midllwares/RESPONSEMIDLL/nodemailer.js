@@ -1,4 +1,4 @@
-import { transporter, htmlgeneretor, email, emailkey } from "../utils/componentes/emails/email_componentes.js";
+import { transporter, htmlgeneretor, email, emailkey } from "../../utils/componentes/emails/email_componentes.js";
 
 async function sendVerifikatsiy(user, url, refreshurl) {
     

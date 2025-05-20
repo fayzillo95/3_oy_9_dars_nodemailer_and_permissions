@@ -1,9 +1,10 @@
 import "dotenv/config"
 import mongoDBConnect from "./config/Database.js"
 import express from "express";
-import errorMidllwares_ from "./midllwares/errorMidllwares_.js";
+import errorMidllwares_ from "./midllwares/RESPONSEMIDLL/errorMidllwares_.js";
 import userRouter from "./routers/user.router_.js";
 import getlog from "./utils/Logs/logsreader.js";
+import categoryRouter from "./routers/category.router_.js";
 
 
 const app  = express()
@@ -17,6 +18,8 @@ const initApp = async () => {
         
         const PORT = process.env.PORT
         app.use("/api",userRouter)
+        app.use("/api", categoryRouter)
+        
         app.use(errorMidllwares_)
         
         app.listen(PORT,console.log(`server running     

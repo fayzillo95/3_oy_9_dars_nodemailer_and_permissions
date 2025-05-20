@@ -15,7 +15,8 @@ export default class UserController {
         try {
             console.log(req.body)
             req.user = await UserService.createUser(req)
-            res.status(req.user.status || 200).json(req.user)
+            req.status = 201
+            next()
         } catch (error) {
             next(error)
         }

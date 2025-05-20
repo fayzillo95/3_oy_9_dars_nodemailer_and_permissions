@@ -1,23 +1,22 @@
 import JWT from "jsonwebtoken"
-import AuthorizationError from "../utils/errors/AuthorizationErrror_.js"
+import AuthorizationError from "../../utils/errors/AuthorizationErrror_.js"
 
 export const verfyToken = (req, res, next) => {
     try {
         const token = req.params.token
-        const clientIP = req.ip.split(",")[0]
         const clientAgent = req.headers['user-agent']
 
         const decoded = JWT.verify(token, process.env.JWT_ACCESS_KEY)
-        console.log("Verfy token line 11 ",`decode ${decoded.ip}` ,"\n", `req ${clientIP}`)
-        if (decoded.ip != clientIP) {
-            throw new AuthorizationError("IP address mismatch", 406)
-        }
 
         if (decoded.agent && decoded.agent != clientAgent) {
             throw new AuthorizationError("User-Agent mismatch", 406)
         }
-
-        req.user = decoded
+        req.user = {
+            _id: decoded._id,
+            isverfy: decoded.isverfy,
+            role: decoded.role,
+            agent: decoded.agent
+        }
         next()
     } catch (error) {
         error.status = error.status || 401
