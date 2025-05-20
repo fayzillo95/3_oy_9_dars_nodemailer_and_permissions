@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UserController from "../controller/User.Controller_.js";
 import { checkToken } from "../midllwares/TOKENMIDLL/checktoken.js";
-import { checkBodyRegister } from "../midllwares/AUTH/register.validate_.js";
+import { checkBodyRegister, permissionValidation } from "../midllwares/AUTH/register.validate_.js";
 import jwtHandlers_ from "../midllwares/TOKENMIDLL/jwtHandlers_.js";
 import { verfyToken } from "../midllwares/verifymidll/verfyToken.js";
 import refreshTokenGeneretor from "../midllwares/verifymidll/refreshToken.generetor.js";
@@ -24,7 +24,7 @@ userRouter.get("/verfy/:token", verfyToken,
                           UserController.verification, 
                           jwtHandlers_)
 
-userRouter.post("/add/permission",checkToken, checkUserRole,  UserController.addPermissionUser, responserHandlers_  )
+userRouter.post("/add/permission",checkToken, checkUserRole,  permissionValidation, UserController.addPermissionUser, responserHandlers_  )
 
 userRouter.patch("/update/role", checkToken, checkUserRole, UserController.assignetRole, responserHandlers_)
 

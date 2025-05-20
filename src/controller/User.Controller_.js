@@ -32,9 +32,9 @@ export default class UserController {
             next(error)
         }
     }
-    static addPermissionUser(req, res, next) {
+    static async addPermissionUser(req, res, next) {
         try{
-            req.user = UserService.addPermission(req.body)
+            req.user = await UserService.addPermission(req.body)
             next()
         }catch(error){
             next(error)

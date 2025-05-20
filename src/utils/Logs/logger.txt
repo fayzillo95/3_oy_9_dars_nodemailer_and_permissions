@@ -16,3 +16,12 @@ Steck file - > /Users/user/Desktop/Vazifa_permission/src/midllwares/AUTH/checkRo
 Line -> 8
 END !!!
 ____________________________________________________________________________________________________ 
+Method - > POST
+Url -> /api/add/permission
+time -> ( 2025-05-20 _ 22:08:10.550) ....
+Type - > ReferenceError
+Error_message - > message is not defined
+Steck file - > /Users/user/Desktop/Vazifa_permission/src/midllwares/AUTH/register.validate_.js
+Line -> 27
+END !!!
+____________________________________________________________________________________________________ 
