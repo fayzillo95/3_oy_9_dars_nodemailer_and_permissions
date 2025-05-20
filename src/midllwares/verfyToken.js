@@ -4,7 +4,7 @@ import AuthorizationError from "../utils/errors/AuthorizationErrror_.js"
 export const verfyToken = (req, res, next) => {
     try {
         const token = req.params.token
-        const clientIP = req.headers['x-forwarded-for'].split(",")[0]
+        const clientIP = req.ip.split(",")[0]
         const clientAgent = req.headers['user-agent']
 
         const decoded = JWT.verify(token, process.env.JWT_ACCESS_KEY)
