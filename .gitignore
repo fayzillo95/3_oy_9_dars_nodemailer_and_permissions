@@ -1,0 +1,5 @@
+.env
+node_modules/
+/testserver.js
+/jsconfig.json
+/.gitignore
